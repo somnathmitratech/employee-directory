@@ -9,4 +9,7 @@ interface NetworkService {
     @GET("/sq-mobile-interview/employees.json")
     fun getEmployees() : Single<EmployeesResponse>
 
+    @GET("/sq-mobile-interview/employees_malformed.json")
+    fun getMalformedResponseEmployees() : Single<EmployeesResponse>
+
 }

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.somnathmitra.android.employeedirectory.MyApplication
 import com.somnathmitra.android.employeedirectory.R
-import com.somnathmitra.android.employeedirectory.data.model.Employee
 import com.somnathmitra.android.employeedirectory.di.components.DaggerEmployeeListFragmentComponent
 import com.somnathmitra.android.employeedirectory.ui.adapter.EmployeeAdapter
 import javax.inject.Inject
@@ -20,7 +19,6 @@ class EmployeesListFragment : Fragment() {
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var recyclerView: RecyclerView
     lateinit var employeeAdapter: EmployeeAdapter
-    var employees : ArrayList<Employee> = ArrayList()
     @Inject
     lateinit var employeesListViewModel: EmployeesListViewModel
 
@@ -41,7 +39,7 @@ class EmployeesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         linearLayoutManager = LinearLayoutManager(context)
-        employeeAdapter = EmployeeAdapter(context,employees)
+        employeeAdapter = EmployeeAdapter(context)
         recyclerView.apply {
             // set a LinearLayoutManager to handle Android
             // RecyclerView behavior
@@ -50,9 +48,7 @@ class EmployeesListFragment : Fragment() {
             adapter = employeeAdapter
         }
         employeesListViewModel.employees.observe(this, Observer{
-            employees.clear()
-            employees.addAll(it)
-            employeeAdapter.setList(employees)
+            employeeAdapter.setList(it)
         })
         employeesListViewModel.getEmployees()
     }

@@ -11,8 +11,10 @@ import com.bumptech.glide.Glide
 import com.somnathmitra.android.employeedirectory.R
 import com.somnathmitra.android.employeedirectory.data.model.Employee
 
-class EmployeeAdapter(private var context: Context? , private var dataList:ArrayList<Employee>) :
+class EmployeeAdapter(private var context: Context?) :
     RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder>() {
+
+    private var dataList:ArrayList<Employee> = ArrayList()
 
     fun setList(dataList: ArrayList<Employee>){
         this.dataList = dataList;

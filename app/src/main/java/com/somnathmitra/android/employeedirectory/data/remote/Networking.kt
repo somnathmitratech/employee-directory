@@ -29,7 +29,7 @@ object Networking {
                         .apply {
                             if(BuildConfig.DEBUG){
                                 level = if(BuildConfig.DEBUG){
-                                    HttpLoggingInterceptor.Level.NONE
+                                    HttpLoggingInterceptor.Level.BASIC
                                 } else {
                                     HttpLoggingInterceptor.Level.NONE
                                 }
