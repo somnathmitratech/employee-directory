@@ -4,42 +4,70 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import com.somnathmitra.android.employeedirectory.MyApplication
 import com.somnathmitra.android.employeedirectory.R
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.internal.schedulers.RxThreadFactory
-import io.reactivex.schedulers.Schedulers
+import com.somnathmitra.android.employeedirectory.di.components.DaggerMainActivityComponent
+import com.somnathmitra.android.employeedirectory.di.components.MainActivityComponent
+import com.somnathmitra.android.employeedirectory.di.module.ActivityModule
+import com.somnathmitra.android.employeedirectory.util.NetworkUtil
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var getValidResponseButton : Button
+    lateinit var showValidResponseButton : Button
+
+    lateinit var mainActivityComponent: MainActivityComponent
+
+    @Inject
+    lateinit var networkUtil: NetworkUtil
+
+    companion object{
+        private const val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getValidResponseButton = findViewById(R.id.getValidResponseButton)
-        getValidResponseButton.setOnClickListener{
-            getValidResponses()
+        showValidResponseButton = findViewById(R.id.getValidResponseButton)
+        getDependencies()
+        showValidResponseButton.setOnClickListener{
+            showValidResponses()
         }
 
     }
 
-    fun getValidResponses(){
+    fun getDependencies(){
+        mainActivityComponent = DaggerMainActivityComponent.builder().
+            activityModule(ActivityModule(this))
+            .applicationComponent((application as MyApplication).applicationComponent)
+            .build()
+
+        mainActivityComponent.inject(this)
+    }
+
+    fun showValidResponses(){
         Log.d("MainActivity","Clicked")
         // Get the text fragment instance
-        val employeesListFragment = EmployeesListFragment()
+        Log.d(TAG,"Network connected = ${networkUtil.isNetworkConnected()}")
+        if(networkUtil.isNetworkConnected()){
 
-        // Get the support fragment manager instance
-        val manager = supportFragmentManager
+            val employeesListFragment = EmployeesListFragment()
 
-        // Begin the fragment transition using support fragment manager
-        val transaction = manager.beginTransaction()
+            // Get the support fragment manager instance
+            val manager = supportFragmentManager
 
-        // Replace the fragment on container
-        transaction.replace(R.id.rootLayout,employeesListFragment)
-        transaction.addToBackStack(null)
+            // Begin the fragment transition using support fragment manager
+            val transaction = manager.beginTransaction()
 
-        // Finishing the transition
-        transaction.commit()
+            // Replace the fragment on container
+            transaction.replace(R.id.rootLayout,employeesListFragment)
+
+            // Finishing the transition
+            transaction.commit()
+        } else {
+            Toast.makeText(this,"Internet is not connected.",Toast.LENGTH_SHORT).show()
+        }
+
     }
 }

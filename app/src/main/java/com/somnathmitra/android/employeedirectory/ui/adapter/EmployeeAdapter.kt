@@ -41,12 +41,13 @@ class EmployeeAdapter(private var context: Context? , private var dataList:Array
         holder.employeeTypeTextView.text = employee.employeeType
         holder.employeeTypeTextView.text = employee.employeeType
         holder.biographyTextView.text = employee.biography
-
+        holder.teamTextView.text = employee.team
     }
 
 
     class EmployeeViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         var photoImageView:ImageView = itemView.findViewById(R.id.photoImageView)
+        var teamTextView:TextView = itemView.findViewById(R.id.teamTextView)
         var nameTextView:TextView = itemView.findViewById(R.id.nameTextView)
         var phoneTextView:TextView = itemView.findViewById(R.id.phoneTextView)
         var emailTextView:TextView = itemView.findViewById(R.id.emailTextView)
