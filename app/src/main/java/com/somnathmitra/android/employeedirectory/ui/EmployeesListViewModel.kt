@@ -21,7 +21,43 @@ class EmployeesListViewModel @Inject constructor(
 
     fun getEmployees(){
         compositeDisposable.add(
+            networkService.getEmployees()
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                        Log.d(TAG, "Received employees response = ${it.employees.size}")
+                        employees.postValue(EmployeeValidator.cleanData(it.employees).apply {
+                            Log.d(TAG,"Cleaned list = ${this.size}")
+                        })
+                    },
+                    {
+                        Log.e(TAG, " Error. ${it.message}")
+                    }
+                )
+        )
+    }
+
+    fun getEmployeesMalformedResponse(){
+        compositeDisposable.add(
             networkService.getMalformedResponseEmployees()
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    {
+                        Log.d(TAG, "Received employees response = ${it.employees.size}")
+                        employees.postValue(EmployeeValidator.cleanData(it.employees).apply {
+                            Log.d(TAG,"Cleaned list = ${this.size}")
+                        })
+                    },
+                    {
+                        Log.e(TAG, " Error. ${it.message}")
+                    }
+                )
+        )
+    }
+
+    fun getEmptyResponse(){
+        compositeDisposable.add(
+            networkService.getEmptyResponse()
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     {

@@ -8,11 +8,27 @@
         tools:context=".ui.MainActivity">
 
         <Button
-                android:text="Get Valid Network Response"
+                android:text="Get Valid Response"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/getValidResponseButton" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="100dp"
-                android:layout_marginTop="50dp" app:layout_constraintTop_toTopOf="parent"/>
+                android:id="@+id/getValidResponseButton" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp" app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+                android:text="Get Malformed Response"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/getMalformedResponseButton" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp" app:layout_constraintTop_toBottomOf="@id/getValidResponseButton"/>
+
+        <Button
+                android:text="Get Empty Response"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/getEmptyResponseButton" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp" app:layout_constraintTop_toBottomOf="@id/getMalformedResponseButton"/>
+
+
 
         <RelativeLayout
             android:id="@+id/rootLayout"
@@ -20,6 +36,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="50dp" app:layout_constraintTop_toBottomOf="@+id/getValidResponseButton" />
+            android:layout_marginTop="20dp" app:layout_constraintTop_toBottomOf="@+id/getEmptyResponseButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

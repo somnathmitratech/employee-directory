@@ -1,10 +1,10 @@
 package com.somnathmitra.android.employeedirectory.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.somnathmitra.android.employeedirectory.MyApplication
 import com.somnathmitra.android.employeedirectory.R
 import com.somnathmitra.android.employeedirectory.di.components.DaggerMainActivityComponent
@@ -14,8 +14,6 @@ import com.somnathmitra.android.employeedirectory.util.NetworkUtil
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-
-    lateinit var showValidResponseButton : Button
 
     lateinit var mainActivityComponent: MainActivityComponent
 
@@ -29,12 +27,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        showValidResponseButton = findViewById(R.id.getValidResponseButton)
         getDependencies()
+        val showValidResponseButton  : Button= findViewById(R.id.getValidResponseButton)
         showValidResponseButton.setOnClickListener{
-            showValidResponses()
+            showEmployeesListFragment(EmployeesListFragment.WELL_FORMED_RESPONSE)
         }
-
+        val showMalformedResponseButton : Button = findViewById(R.id.getMalformedResponseButton)
+        showMalformedResponseButton.setOnClickListener{
+            showEmployeesListFragment(EmployeesListFragment.MALFORMED_RESPONSE)
+        }
+        val showEmptyResponseButton : Button = findViewById(R.id.getEmptyResponseButton)
+        showEmptyResponseButton.setOnClickListener{
+            showEmployeesListFragment(EmployeesListFragment.EMPTY_RESPONSE)
+        }
     }
 
     fun getDependencies(){
@@ -46,13 +51,14 @@ class MainActivity : AppCompatActivity() {
         mainActivityComponent.inject(this)
     }
 
-    fun showValidResponses(){
+
+    fun showEmployeesListFragment(callType : Int) {
         Log.d("MainActivity","Clicked")
         // Get the text fragment instance
         Log.d(TAG,"Network connected = ${networkUtil.isNetworkConnected()}")
         if(networkUtil.isNetworkConnected()){
 
-            val employeesListFragment = EmployeesListFragment()
+            val employeesListFragment = EmployeesListFragment.newInstance(callType)
 
             // Get the support fragment manager instance
             val manager = supportFragmentManager
@@ -68,6 +74,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this,"Internet is not connected.",Toast.LENGTH_SHORT).show()
         }
-
     }
 }

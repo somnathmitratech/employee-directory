@@ -1,5 +1,6 @@
 package com.somnathmitra.android.employeedirectory.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,30 @@ class EmployeesListFragment : Fragment() {
     lateinit var employeeAdapter: EmployeeAdapter
     @Inject
     lateinit var employeesListViewModel: EmployeesListViewModel
+    var callType: Int = WELL_FORMED_RESPONSE
+
+    companion object {
+
+        const val CALL_TYPE_KEY = "CALL_TYPE"
+        const val WELL_FORMED_RESPONSE = 1
+        const val MALFORMED_RESPONSE = 2
+        const val EMPTY_RESPONSE = 3
+
+        @JvmStatic
+        fun newInstance(callType : Int) = EmployeesListFragment().apply {
+            arguments = Bundle().apply {
+                putInt(CALL_TYPE_KEY, callType)
+            }
+        }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        arguments?.getInt(CALL_TYPE_KEY)?.let {
+            callType = it
+        }
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
        var view : View = inflater.inflate(R.layout.layout_generic_list, container,false)
@@ -50,7 +75,14 @@ class EmployeesListFragment : Fragment() {
         employeesListViewModel.employees.observe(this, Observer{
             employeeAdapter.setList(it)
         })
-        employeesListViewModel.getEmployees()
+        when(callType){
+            MALFORMED_RESPONSE -> employeesListViewModel.getEmployeesMalformedResponse()
+            EMPTY_RESPONSE -> employeesListViewModel.getEmptyResponse()
+            else -> {
+                employeesListViewModel.getEmployees()
+            }
+        }
+
     }
 
     override fun onDestroy() {
