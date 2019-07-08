@@ -42,15 +42,4 @@ data class Employee (
     val employeeType : String
 ) {
 
-    fun isValid() : Boolean{
-
-        // check required fields
-        // assuming full_name / phone number / email address are id
-        // are required fields
-        return !id.isNullOrEmpty() &&
-                !fullName.isNullOrEmpty() &&
-                !phoneNumber.isNullOrEmpty() &&
-                !emailAddress.isNullOrEmpty()
-
-    }
 }
