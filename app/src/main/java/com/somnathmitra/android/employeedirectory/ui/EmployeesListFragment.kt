@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.somnathmitra.android.employeedirectory.MyApplication
@@ -23,11 +24,14 @@ class EmployeesListFragment : Fragment() {
     lateinit var recyclerView: RecyclerView
     lateinit var employeeAdapter: EmployeeAdapter
     lateinit var employees : ArrayList<Employee>
+    lateinit var employeesListViewModel: EmployeesListViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
        var view : View = inflater.inflate(R.layout.layout_generic_list, container,false)
         recyclerView = view.findViewById(R.id.recyclerView)
         employees = ArrayList()
+        var myApplication : MyApplication = activity!!.application as MyApplication
+        employeesListViewModel = EmployeesListViewModel(myApplication.compositeDisposable,myApplication.networkService)
         return view
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,21 +45,17 @@ class EmployeesListFragment : Fragment() {
             // set the custom adapter to the RecyclerView
             adapter = employeeAdapter
         }
-        var myApplication : MyApplication = activity!!.application as MyApplication
-        myApplication!!.networkService.getEmployees()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    Log.d("EmployeesListFragment", "Received employee reponsee = ${it.employees.size}")
-                    employees.addAll(it.employees)
-                    employeeAdapter.setList(employees)
+        employeesListViewModel.employees.observe(this, Observer{
+            employees.clear()
+            employees.addAll(it)
+            employeeAdapter.setList(employees)
+        })
+        employeesListViewModel.getEmployees()
+    }
 
-                },
-                {
-                    Toast.makeText(context,it.message,Toast.LENGTH_SHORT).show()
-                }
-            )
+    override fun onDestroy() {
+        employeesListViewModel.onDestroy()
+        super.onDestroy()
     }
 
 }
