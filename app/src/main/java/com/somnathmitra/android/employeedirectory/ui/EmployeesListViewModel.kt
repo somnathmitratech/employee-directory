@@ -6,8 +6,9 @@ import com.somnathmitra.android.employeedirectory.data.model.Employee
 import com.somnathmitra.android.employeedirectory.data.remote.NetworkService
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class EmployeesListViewModel(
+class EmployeesListViewModel @Inject constructor(
     private val compositeDisposable: CompositeDisposable,
     private val networkService : NetworkService) {
 
